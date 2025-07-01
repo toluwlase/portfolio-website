@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 
     <style>
         /* * =============================================
@@ -150,9 +151,71 @@
             pointer-events: none; /* Allows clicks to pass through */
         }
         .experience-item {
-             padding: 1.5rem; /* 24px */
-             position: relative;
-             z-index: 2; /* Keep content above the highlighter */
+            padding: 1.5rem; /* 24px */
+            position: relative;
+            z-index: 2; /* Keep content above the highlighter */
+        }
+
+        /* Thesis Chart Styles */
+        #thesis-chart-container {
+            width: 100%;
+        }
+        #thesis-radar-chart {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        .legend-item.active {
+            opacity: 1;
+            font-weight: 600;
+        }
+        .legend-color {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 0.25rem;
+        }
+        #unique-phenotypes-container {
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+        }
+        .phenotype-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .phenotype-list li {
+            background-color: var(--bg-secondary);
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+        .chart-tooltip {
+            position: absolute;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 0.875rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
         }
 
         /* General Animation */
@@ -183,9 +246,9 @@
                 </nav>
                 <div class="flex items-center">
                      <button id="dark-mode-toggle" class="p-2 rounded-full text-secondary hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none transition-colors mr-2">
-                        <i data-lucide="moon" id="moon-icon"></i>
-                        <i data-lucide="sun" id="sun-icon" class="hidden"></i>
-                    </button>
+                         <i data-lucide="moon" id="moon-icon"></i>
+                         <i data-lucide="sun" id="sun-icon" class="hidden"></i>
+                     </button>
                     <div class="md:hidden">
                         <button id="mobile-menu-button" type="button" class="p-2 rounded-md text-secondary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-color">
                             <i data-lucide="menu"></i>
@@ -233,10 +296,10 @@
 
         <section class="py-12 flex flex-col items-center">
              <div id="cv-toggle-container" class="glass-effect">
-                <span id="hds-title" class="profile-title active">Health Data Scientist</span>
-                <button id="cv-toggle-button" class="glass-effect"></button>
-                <span id="it-title" class="profile-title inactive">IT Systems Specialist</span>
-            </div>
+                 <span id="hds-title" class="profile-title active">Health Data Scientist</span>
+                 <button id="cv-toggle-button" class="glass-effect"></button>
+                 <span id="it-title" class="profile-title inactive">IT Systems Specialist</span>
+             </div>
         </section>
 
         <section id="about" class="py-24 sm:py-32">
@@ -260,7 +323,7 @@
                 </div>
                 <div class="glass-effect p-6 interactive-card">
                     <div class="flex items-center gap-4"><div class="bg-accent-color/10 p-3 rounded-full"><i data-lucide="heart-pulse" class="text-accent-color"></i></div><h3 class="text-xl font-semibold">Healthcare Systems</h3></div>
-                     <ul class="mt-4 list-disc list-inside text-secondary space-y-2"><li>EPR/EHR (Oracle Cerner, etc.)</li><li>HL7, FHIR Interoperability</li><li>SNOMED CT, ICD-10</li><li>GDPR & Data Governance</li></ul>
+                    <ul class="mt-4 list-disc list-inside text-secondary space-y-2"><li>EPR/EHR (Oracle Cerner, etc.)</li><li>HL7, FHIR Interoperability</li><li>SNOMED CT, ICD-10</li><li>GDPR & Data Governance</li></ul>
                 </div>
             </div>
         </section>
@@ -268,21 +331,58 @@
         <section id="projects" class="py-24 sm:py-32">
             <div class="text-center">
                 <h2 class="text-3xl md:text-4xl font-bold">My Projects</h2>
-                <p class="mt-4 text-lg text-secondary max-w-2xl mx-auto">A selection of projects I've built.</p>
+                <p class="mt-4 text-lg text-secondary max-w-2xl mx-auto">A selection of projects showcasing my ability to translate data into tangible insights and applications.</p>
             </div>
-            <div class="mt-16 max-w-2xl mx-auto">
-                <div class="glass-effect p-8 interactive-card">
-                    <div class="flex flex-col sm:flex-row items-center gap-8">
-                        <div class="flex-shrink-0 bg-accent-color/10 p-4 rounded-lg">
-                             <i data-lucide="brain-circuit" class="text-accent-color w-16 h-16"></i>
+            <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Project 1: Sphinx Quiz -->
+                <div class="glass-effect p-8 interactive-card flex flex-col">
+                    <div class="flex-shrink-0 flex items-center gap-4 mb-4">
+                        <div class="bg-accent-color/10 p-4 rounded-lg">
+                             <i data-lucide="brain-circuit" class="text-accent-color w-12 h-12"></i>
                         </div>
-                        <div class="text-center sm:text-left">
+                        <div>
                             <h3 class="text-2xl font-bold">The Unofficial EPIC Sphinx Quiz</h3>
-                            <p class="text-secondary mt-2 mb-4">A gamified quiz application designed to test knowledge on the EPIC Sphinx system, featuring multiple modes and performance analytics.</p>
-                            <a href="http://sphinx.toluwalase.uk" target="_blank" rel="noopener noreferrer" class="btn btn-glass inline-flex items-center gap-2">
-                                Take the Quiz
-                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </a>
+                             <p class="text-secondary">Gamified learning & performance analytics</p>
+                        </div>
+                    </div>
+                    <p class="text-secondary mt-2 mb-4 flex-grow">A gamified quiz application designed to test knowledge on the EPIC Sphinx system, featuring multiple modes and performance analytics.</p>
+                    <a href="http://sphinx.toluwalase.uk" target="_blank" rel="noopener noreferrer" class="btn btn-glass inline-flex items-center gap-2 self-start">
+                        Take the Quiz
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- Project 2: Pancreatic Cancer Phenotypes -->
+                <div class="glass-effect p-8 interactive-card flex flex-col">
+                     <div class="flex-shrink-0 flex items-center gap-4 mb-4">
+                        <div class="bg-accent-color/10 p-4 rounded-lg">
+                             <i data-lucide="radar" class="text-accent-color w-12 h-12"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold">Pancreatic Cancer Phenotypes</h3>
+                            <p class="text-secondary">MSc Thesis Visualization</p>
+                        </div>
+                    </div>
+                    <p class="text-secondary mt-2 mb-4 flex-grow">An NLP-driven analysis to extract and compare pancreatic cancer phenotypes from diverse text sources. This interactive visualization showcases the distinct phenotypic profiles from Clinical Notes (MIMIC-IV), Social Media, and Biomedical Literature, highlighting shared and unique disease characteristics.</p>
+                    <div id="thesis-chart-container">
+                        <div id="thesis-radar-chart"></div>
+                        <div class="chart-legend" id="thesis-chart-legend"></div>
+                    </div>
+                    <div id="unique-phenotypes-container" class="hidden">
+                        <h4 class="font-bold text-lg mb-2 text-center">Unique Phenotypes</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <h5 class="font-semibold text-center mb-2">Clinical Notes</h5>
+                                <ul class="phenotype-list" id="cdp-unique-list"></ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-center mb-2">Social Media</h5>
+                                <ul class="phenotype-list" id="smdp-unique-list"></ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-center mb-2">Literature</h5>
+                                <ul class="phenotype-list" id="bldp-unique-list"></ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -335,6 +435,8 @@
 
     <footer class="border-t border-custom mt-20"><div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-secondary"><p>&copy; 2025 Steven Olufowobi. All Rights Reserved.</p></div></footer>
 
+    <div class="chart-tooltip"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
@@ -354,6 +456,7 @@
                 html.classList.toggle('dark', theme === 'dark');
                 moonIcon.classList.toggle('hidden', theme === 'dark');
                 sunIcon.classList.toggle('hidden', theme !== 'dark');
+                window.dispatchEvent(new Event('themechange')); // Dispatch event for charts
             };
             const savedTheme = localStorage.getItem('theme') || 'light';
             applyTheme(savedTheme);
@@ -386,30 +489,22 @@
             const experienceContent = document.getElementById('experience-content');
             let isItProfile = false;
             
-            // --- FINALIZED EXPERIENCE HIGHLIGHTER ---
+            // Experience Highlighter
             const highlighter = document.getElementById('experience-highlighter');
             let experienceObserver;
 
             function observeExperienceItems() {
                 if (experienceObserver) experienceObserver.disconnect();
-                
                 const experienceItems = document.querySelectorAll('.experience-item');
                 if (experienceItems.length === 0) {
                     highlighter.style.opacity = '0';
                     return;
                 }
-                
                 const firstItem = experienceItems[0];
                 highlighter.style.top = `${firstItem.offsetTop}px`;
                 highlighter.style.height = `${firstItem.offsetHeight}px`;
                 highlighter.style.opacity = '1';
-
-                const observerOptions = {
-                    root: null,
-                    rootMargin: '-40% 0px -60% 0px',
-                    threshold: 0
-                };
-
+                const observerOptions = { root: null, rootMargin: '-40% 0px -60% 0px', threshold: 0 };
                 experienceObserver = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -419,17 +514,14 @@
                         }
                     });
                 }, observerOptions);
-
                 experienceItems.forEach(item => experienceObserver.observe(item));
             }
             
-            // --- MOBILE SCROLL ANIMATIONS FOR OTHER CARDS ---
+            // Mobile Scroll Animations
             const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
             if (isTouchDevice()) {
                 const cards = document.querySelectorAll('.interactive-card');
                 cards.forEach(card => card.classList.add('card-hidden'));
-
                 const cardObserver = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -438,7 +530,6 @@
                         }
                     });
                 }, { threshold: 0.1 });
-
                 cards.forEach(card => cardObserver.observe(card));
             }
 
@@ -449,7 +540,7 @@
                 experienceContent.innerHTML = data.experience.map((job) => `
                     <div class="experience-item">
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-4 items-start">
-                           <div class="md:col-span-1 text-left md:text-right pt-2"><p class="font-semibold text-secondary">${job.date}</p></div>
+                            <div class="md:col-span-1 text-left md:text-right pt-2"><p class="font-semibold text-secondary">${job.date}</p></div>
                             <div class="md:col-span-3">
                                 <h3 class="text-2xl font-bold">${job.role}</h3>
                                 <p class="text-lg text-secondary mt-1">${job.company}</p>
@@ -457,7 +548,6 @@
                             </div>
                         </div>
                     </div>`).join('');
-                
                 setTimeout(observeExperienceItems, 0);
             }
             
@@ -474,18 +564,23 @@
             toggleButton.addEventListener('click', () => setToggleState(!isItProfile));
             hdsTitle.addEventListener('click', () => setToggleState(false));
             itTitle.addEventListener('click', () => setToggleState(true));
-            
             setToggleState(false);
 
-            // Main Navigation Scrollspy
+            // Navigation
             const sections = document.querySelectorAll('main section[id]');
             const navLinks = document.querySelectorAll('#desktop-nav a');
+            const sectionIds = Array.from(sections).map(s => s.id);
+            let currentSectionIndex = 0;
             
             function setActiveLink(id) {
                 const targetId = (id === 'home' || !id) ? 'about' : id;
                 navLinks.forEach(link => {
                     link.classList.toggle('nav-active', link.getAttribute('href') === `#${targetId}`);
                 });
+                const newIndex = sectionIds.indexOf(targetId);
+                if (newIndex !== -1) {
+                    currentSectionIndex = newIndex;
+                }
             }
             
             const mainObserver = new IntersectionObserver(entries => {
@@ -504,6 +599,147 @@
                     }, 100);
                 });
             });
+
+            // --- Thesis Visualization Logic ---
+            const thesisData = {
+                facets: ["Neoplasm", "Integument", "Blood", "Cellular", "Growth Abnormality", "Nervous System", "Metabolism/Homeostasis", "Genitourinary", "Immune", "Cardiovascular", "Endocrine", "Respiratory", "Head or Neck", "Constitutional", "Prenatal or Birth", "Digestive", "Thoracic Cavity", "Limbs"],
+                // Data extracted from Figure 5 in the thesis PDF
+                series: [
+                    { name: "Clinical (CDP)", color: "#38bdf8", values: [-11.8, -11.5, -9.5, -7.5, -7.2, -6.5, -6.8, -6.2, -7.0, -7.5, -8.5, -8.0, -9.0, -9.5, -11.0, -6.5, -9.8, -11.0] },
+                    { name: "Social Media (SMDP)", color: "#fb923c", values: [-7.0, -9.0, -9.2, -8.5, -8.8, -9.0, -9.5, -11.0, -11.5, -11.8, -11.5, -10.0, -9.5, -8.0, -12.0, -9.0, -12.0, -11.5] },
+                    { name: "Literature (BLDP)", color: "#34d399", values: [-6.5, -8.5, -8.8, -9.0, -9.5, -9.8, -10.0, -10.5, -10.2, -10.0, -9.8, -9.5, -9.0, -10.5, -11.5, -6.0, -10.8, -10.5] }
+                ]
+            };
+            
+            const uniquePhenotypes = {
+                'Clinical (CDP)': ["Gallbladder mass", "Budd-Chiari Syndrome", "Hepatic vein thrombosis", "Failure to thrive", "Dehydration", "Coma"],
+                'Social Media (SMDP)': ["Aggressive behavior", "Non-small cell lung carcinoma", "Glioblastoma multiforme", "Hypertrichosis"],
+                'Literature (BLDP)': ["Appendiceal mucinous neoplasm", "Nasolacrimal sac epithelial papillary carcinoma", "Esophageal varix", "Ungual Fibroma", "Intrahepatic biliary atresia"]
+            };
+
+            let activeSeries = {"Clinical (CDP)": true, "Social Media (SMDP)": true, "Literature (BLDP)": true};
+
+            function drawRadarChart() {
+                const container = d3.select("#thesis-radar-chart");
+                container.select("svg").remove();
+
+                const style = getComputedStyle(document.body);
+                const textColor = style.getPropertyValue('--text-secondary');
+                const gridColor = style.getPropertyValue('--border-color');
+
+                const width = container.node().getBoundingClientRect().width;
+                const height = width;
+                const margin = {top: 50, right: 50, bottom: 50, left: 50};
+                const radius = Math.min(width - margin.left - margin.right, height - margin.top - margin.bottom) / 2;
+                
+                const rScale = d3.scaleLinear().range([0, radius]).domain([-12, -6]);
+
+                const svg = container.append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .append("g")
+                    .attr("transform", `translate(${width/2}, ${height/2})`);
+                
+                // Grid and Axes
+                const axisGrid = svg.append("g").attr("class", "axisWrapper");
+                axisGrid.selectAll(".levels")
+                   .data(d3.range(1, 5).reverse())
+                   .enter()
+                   .append("circle")
+                   .attr("class", "gridCircle")
+                   .attr("r", d => radius / 4 * d)
+                   .style("fill", "none")
+                   .style("stroke", gridColor)
+                   .style("stroke-opacity", 0.5);
+
+                const angleSlice = Math.PI * 2 / thesisData.facets.length;
+
+                const axis = axisGrid.selectAll(".axis")
+                    .data(thesisData.facets)
+                    .enter()
+                    .append("g")
+                    .attr("class", "axis");
+
+                axis.append("line")
+                    .attr("x1", 0).attr("y1", 0)
+                    .attr("x2", (d, i) => rScale(-6) * Math.cos(angleSlice * i - Math.PI/2))
+                    .attr("y2", (d, i) => rScale(-6) * Math.sin(angleSlice * i - Math.PI/2))
+                    .attr("class", "line")
+                    .style("stroke", gridColor).style("stroke-width", "1px");
+
+                axis.append("text")
+                    .attr("class", "legend")
+                    .style("font-size", "10px").attr("text-anchor", "middle")
+                    .attr("dy", "0.35em")
+                    .attr("x", (d, i) => rScale(-5.5) * Math.cos(angleSlice * i - Math.PI/2))
+                    .attr("y", (d, i) => rScale(-5.5) * Math.sin(angleSlice * i - Math.PI/2))
+                    .text(d => d)
+                    .style("fill", textColor);
+
+                // Draw the data blobs
+                const radarLine = d3.lineRadial()
+                    .curve(d3.curveCardinalClosed)
+                    .radius(d => rScale(d))
+                    .angle((d,i) => i * angleSlice);
+
+                const blobWrapper = svg.selectAll(".radarWrapper")
+                    .data(thesisData.series.filter(d => activeSeries[d.name]))
+                    .enter().append("g")
+                    .attr("class", "radarWrapper");
+                
+                blobWrapper.append("path")
+                    .attr("class", "radarArea")
+                    .attr("d", d => radarLine(d.values))
+                    .style("fill", d => d.color)
+                    .style("fill-opacity", 0.1)
+                    .style("stroke", d => d.color)
+                    .style("stroke-width", "2px");
+            }
+
+            function setupLegend() {
+                const legendContainer = d3.select("#thesis-chart-legend");
+                legendContainer.selectAll("*").remove();
+                
+                thesisData.series.forEach(series => {
+                    const legendItem = legendContainer.append("div")
+                        .attr("class", `legend-item ${activeSeries[series.name] ? 'active' : ''}`)
+                        .on("click", function() {
+                            activeSeries[series.name] = !activeSeries[series.name];
+                            d3.select(this).classed("active", activeSeries[series.name]);
+                            drawRadarChart();
+                        });
+                    
+                    legendItem.append("div")
+                        .attr("class", "legend-color")
+                        .style("background-color", series.color);
+                    
+                    legendItem.append("span").text(series.name);
+                });
+            }
+            
+            function populateUniquePhenotypes() {
+                const container = d3.select("#unique-phenotypes-container");
+                if (Object.values(uniquePhenotypes).some(arr => arr.length > 0)) {
+                    container.classed('hidden', false);
+                    Object.keys(uniquePhenotypes).forEach(key => {
+                        // FIX: Correctly extract the abbreviation (cdp, smdp, bldp)
+                        const abbreviation = key.match(/\(([^)]+)\)/)[1].toLowerCase();
+                        const listId = `#${abbreviation}-unique-list`;
+                        
+                        const list = d3.select(listId);
+                        list.selectAll('li').remove();
+                        uniquePhenotypes[key].forEach(pheno => {
+                            list.append('li').text(pheno);
+                        });
+                    });
+                }
+            }
+
+            populateUniquePhenotypes();
+            setupLegend();
+            drawRadarChart();
+            window.addEventListener('resize', drawRadarChart);
+            window.addEventListener('themechange', drawRadarChart);
         });
     </script>
 </body>
