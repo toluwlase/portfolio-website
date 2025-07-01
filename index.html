@@ -150,43 +150,9 @@
             pointer-events: none; /* Allows clicks to pass through */
         }
         .experience-item {
-            padding: 1.5rem; /* 24px */
-            position: relative;
-            z-index: 2; /* Keep content above the highlighter */
-        }
-
-        /* Stallion Game Styles */
-        #dino-game-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 120px; /* Game area height */
-            background: var(--bg-glass);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--border-glass);
-            z-index: 999;
-            overflow: hidden;
-        }
-        #stallion-game-canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-            font-family: 'Inter', sans-serif;
-        }
-        #game-instructions {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: var(--text-secondary);
-            font-size: 1rem;
-            font-weight: 500;
-            pointer-events: none; /* So it doesn't block clicks/taps */
-            text-align: center;
-            opacity: 0;
-            transition: opacity 0.3s;
+             padding: 1.5rem; /* 24px */
+             position: relative;
+             z-index: 2; /* Keep content above the highlighter */
         }
 
         /* General Animation */
@@ -217,9 +183,9 @@
                 </nav>
                 <div class="flex items-center">
                      <button id="dark-mode-toggle" class="p-2 rounded-full text-secondary hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none transition-colors mr-2">
-                         <i data-lucide="moon" id="moon-icon"></i>
-                         <i data-lucide="sun" id="sun-icon" class="hidden"></i>
-                     </button>
+                        <i data-lucide="moon" id="moon-icon"></i>
+                        <i data-lucide="sun" id="sun-icon" class="hidden"></i>
+                    </button>
                     <div class="md:hidden">
                         <button id="mobile-menu-button" type="button" class="p-2 rounded-md text-secondary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-color">
                             <i data-lucide="menu"></i>
@@ -267,10 +233,10 @@
 
         <section class="py-12 flex flex-col items-center">
              <div id="cv-toggle-container" class="glass-effect">
-                 <span id="hds-title" class="profile-title active">Health Data Scientist</span>
-                 <button id="cv-toggle-button" class="glass-effect"></button>
-                 <span id="it-title" class="profile-title inactive">IT Systems Specialist</span>
-             </div>
+                <span id="hds-title" class="profile-title active">Health Data Scientist</span>
+                <button id="cv-toggle-button" class="glass-effect"></button>
+                <span id="it-title" class="profile-title inactive">IT Systems Specialist</span>
+            </div>
         </section>
 
         <section id="about" class="py-24 sm:py-32">
@@ -294,7 +260,7 @@
                 </div>
                 <div class="glass-effect p-6 interactive-card">
                     <div class="flex items-center gap-4"><div class="bg-accent-color/10 p-3 rounded-full"><i data-lucide="heart-pulse" class="text-accent-color"></i></div><h3 class="text-xl font-semibold">Healthcare Systems</h3></div>
-                    <ul class="mt-4 list-disc list-inside text-secondary space-y-2"><li>EPR/EHR (Oracle Cerner, etc.)</li><li>HL7, FHIR Interoperability</li><li>SNOMED CT, ICD-10</li><li>GDPR & Data Governance</li></ul>
+                     <ul class="mt-4 list-disc list-inside text-secondary space-y-2"><li>EPR/EHR (Oracle Cerner, etc.)</li><li>HL7, FHIR Interoperability</li><li>SNOMED CT, ICD-10</li><li>GDPR & Data Governance</li></ul>
                 </div>
             </div>
         </section>
@@ -367,11 +333,6 @@
 
     </main>
 
-    <div id="dino-game-container">
-        <canvas id="stallion-game-canvas"></canvas>
-        <div id="game-instructions"></div>
-    </div>
-
     <footer class="border-t border-custom mt-20"><div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-secondary"><p>&copy; 2025 Steven Olufowobi. All Rights Reserved.</p></div></footer>
 
     <script>
@@ -393,7 +354,6 @@
                 html.classList.toggle('dark', theme === 'dark');
                 moonIcon.classList.toggle('hidden', theme === 'dark');
                 sunIcon.classList.toggle('hidden', theme !== 'dark');
-                window.dispatchEvent(new Event('themechange'));
             };
             const savedTheme = localStorage.getItem('theme') || 'light';
             applyTheme(savedTheme);
@@ -426,22 +386,30 @@
             const experienceContent = document.getElementById('experience-content');
             let isItProfile = false;
             
-            // Experience Highlighter
+            // --- FINALIZED EXPERIENCE HIGHLIGHTER ---
             const highlighter = document.getElementById('experience-highlighter');
             let experienceObserver;
 
             function observeExperienceItems() {
                 if (experienceObserver) experienceObserver.disconnect();
+                
                 const experienceItems = document.querySelectorAll('.experience-item');
                 if (experienceItems.length === 0) {
                     highlighter.style.opacity = '0';
                     return;
                 }
+                
                 const firstItem = experienceItems[0];
                 highlighter.style.top = `${firstItem.offsetTop}px`;
                 highlighter.style.height = `${firstItem.offsetHeight}px`;
                 highlighter.style.opacity = '1';
-                const observerOptions = { root: null, rootMargin: '-40% 0px -60% 0px', threshold: 0 };
+
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '-40% 0px -60% 0px',
+                    threshold: 0
+                };
+
                 experienceObserver = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -451,14 +419,17 @@
                         }
                     });
                 }, observerOptions);
+
                 experienceItems.forEach(item => experienceObserver.observe(item));
             }
             
-            // Mobile Scroll Animations
+            // --- MOBILE SCROLL ANIMATIONS FOR OTHER CARDS ---
             const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
             if (isTouchDevice()) {
                 const cards = document.querySelectorAll('.interactive-card');
                 cards.forEach(card => card.classList.add('card-hidden'));
+
                 const cardObserver = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -467,6 +438,7 @@
                         }
                     });
                 }, { threshold: 0.1 });
+
                 cards.forEach(card => cardObserver.observe(card));
             }
 
@@ -477,7 +449,7 @@
                 experienceContent.innerHTML = data.experience.map((job) => `
                     <div class="experience-item">
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-4 items-start">
-                            <div class="md:col-span-1 text-left md:text-right pt-2"><p class="font-semibold text-secondary">${job.date}</p></div>
+                           <div class="md:col-span-1 text-left md:text-right pt-2"><p class="font-semibold text-secondary">${job.date}</p></div>
                             <div class="md:col-span-3">
                                 <h3 class="text-2xl font-bold">${job.role}</h3>
                                 <p class="text-lg text-secondary mt-1">${job.company}</p>
@@ -485,6 +457,7 @@
                             </div>
                         </div>
                     </div>`).join('');
+                
                 setTimeout(observeExperienceItems, 0);
             }
             
@@ -501,23 +474,18 @@
             toggleButton.addEventListener('click', () => setToggleState(!isItProfile));
             hdsTitle.addEventListener('click', () => setToggleState(false));
             itTitle.addEventListener('click', () => setToggleState(true));
+            
             setToggleState(false);
 
-            // Navigation
+            // Main Navigation Scrollspy
             const sections = document.querySelectorAll('main section[id]');
             const navLinks = document.querySelectorAll('#desktop-nav a');
-            const sectionIds = Array.from(sections).map(s => s.id);
-            let currentSectionIndex = 0;
             
             function setActiveLink(id) {
                 const targetId = (id === 'home' || !id) ? 'about' : id;
                 navLinks.forEach(link => {
                     link.classList.toggle('nav-active', link.getAttribute('href') === `#${targetId}`);
                 });
-                const newIndex = sectionIds.indexOf(targetId);
-                if (newIndex !== -1) {
-                    currentSectionIndex = newIndex;
-                }
             }
             
             const mainObserver = new IntersectionObserver(entries => {
@@ -536,298 +504,6 @@
                     }, 100);
                 });
             });
-
-            // --- Stallion Game Logic ---
-            const canvas = document.getElementById('stallion-game-canvas');
-            const ctx = canvas.getContext('2d');
-            const instructions = document.getElementById('game-instructions');
-            
-            let gameState = 'waiting'; // 'waiting' or 'running'
-            let gameFrame = 0;
-
-            // Game Colors
-            let playerColor, obstacleColor, groundColor, hillColor, cloudColor;
-
-            // Player (Stallion) - Smaller and floatier
-            const player = {
-                x: 50, y: 0, width: 40, height: 40,
-                velocityY: 0, gravity: 0.5, jumpPower: -13, isJumping: false, groundY: 0
-            };
-
-            // World Elements
-            let obstacles = [];
-            let clouds = [];
-            let hills = [];
-            let obstacleSpeed = 1.5; // Slower base speed
-            let obstacleSpawnTimer = 0;
-            const baseObstacleSpawnRate = 150; 
-
-            function handleInput(e) {
-                if (gameState === 'waiting') {
-                    gameState = 'running';
-                    instructions.style.opacity = '0';
-                    resetGame(); // Start fresh
-                }
-
-                if (e.code === 'Space' || e.type === 'touchstart') {
-                    if (e.type === 'touchstart') {
-                         if (e.target.closest('a, button')) return;
-                         e.preventDefault();
-                    } else {
-                        e.preventDefault();
-                    }
-                    jump();
-                }
-            }
-
-            function jump() {
-                if (!player.isJumping && gameState === 'running') {
-                    player.isJumping = true;
-                    player.velocityY = player.jumpPower;
-                }
-            }
-
-            function resetGame() {
-                obstacles = [];
-                gameFrame = 0;
-                player.y = player.groundY - player.height;
-                player.velocityY = 0;
-                player.isJumping = false;
-                obstacleSpawnTimer = 0;
-            }
-
-            function navigateOnCollision() {
-                gameState = 'waiting';
-                // Only scroll if not on the last section
-                if (currentSectionIndex < sectionIds.length - 1) {
-                    const nextSectionId = sectionIds[currentSectionIndex + 1];
-                    const nextSection = document.getElementById(nextSectionId);
-                    if (nextSection) {
-                       nextSection.scrollIntoView({ behavior: 'smooth' });
-                    }
-                }
-                // If on the last section, the game just resets to 'waiting' without scrolling
-            }
-            
-            function updateGameColors() {
-                const computedStyles = getComputedStyle(document.body);
-                playerColor = computedStyles.getPropertyValue('--text-secondary');
-                obstacleColor = computedStyles.getPropertyValue('--accent-color');
-                if (html.classList.contains('dark')) {
-                    groundColor = 'rgba(55, 65, 81, 0.5)';
-                    hillColor = 'rgba(31, 41, 55, 0.6)';
-                    cloudColor = 'rgba(255, 255, 255, 0.05)';
-                } else {
-                    // Adjusted for better light mode visibility
-                    groundColor = 'rgba(229, 231, 235, 0.5)';
-                    hillColor = 'rgba(156, 163, 175, 0.5)'; // Darker gray for hills
-                    cloudColor = 'rgba(229, 231, 235, 0.8)'; // More opaque clouds
-                }
-            }
-            
-            function resizeGameCanvas() {
-                canvas.width = canvas.clientWidth;
-                canvas.height = canvas.clientHeight;
-                player.groundY = canvas.height - 10;
-                player.y = player.groundY - player.height;
-
-                const referenceWidth = 800;
-                obstacleSpeed = 1.5 * (canvas.width / referenceWidth);
-
-                hills = [];
-                clouds = [];
-                spawnInitialScenery();
-                draw();
-            }
-
-            function gameLoop() {
-                if (gameState === 'running') {
-                    update();
-                }
-                draw();
-                requestAnimationFrame(gameLoop);
-            }
-
-            function update() {
-                gameFrame++;
-
-                // Update Player
-                player.velocityY += player.gravity;
-                player.y += player.velocityY;
-
-                if (player.y > player.groundY - player.height) {
-                    player.y = player.groundY - player.height;
-                    player.velocityY = 0;
-                    player.isJumping = false;
-                }
-
-                updateObstacles();
-                updateScenery();
-            }
-
-            function updateObstacles() {
-                obstacleSpawnTimer++;
-                if (obstacleSpawnTimer > baseObstacleSpawnRate) {
-                    createObstacle();
-                    obstacleSpawnTimer = 0;
-                }
-
-                for (let i = obstacles.length - 1; i >= 0; i--) {
-                    let obs = obstacles[i];
-                    obs.x -= obstacleSpeed;
-
-                    for(const rect of obs.rects) {
-                         if (player.x < obs.x + rect.x + rect.width &&
-                             player.x + player.width > obs.x + rect.x &&
-                             player.y < obs.y + rect.y + rect.height &&
-                             player.y + player.height > obs.y + rect.y) 
-                         {
-                            navigateOnCollision();
-                            return; 
-                         }
-                    }
-
-                    if (obs.x + obs.width < 0) {
-                        obstacles.splice(i, 1);
-                    }
-                }
-            }
-            
-            function createObstacle() {
-                // Obstacles get slightly larger over time, but start smaller
-                const sizeMultiplier = 1 + (gameFrame / 15000); 
-                const baseHeight = 20 * sizeMultiplier;
-                const baseWidth = 10 * sizeMultiplier;
-
-                let obstacle = { x: canvas.width, y: player.groundY, rects: [] };
-                const type = Math.floor(Math.random() * 4);
-
-                if (type === 3) { // Rock
-                    let rockHeight = 12 * sizeMultiplier;
-                    let rockWidth = 20 * sizeMultiplier;
-                    obstacle.rects.push({x:0, y: -rockHeight, width: rockWidth, height: rockHeight });
-                } else { // Cacti
-                    let h1 = baseHeight + Math.random() * 12 * sizeMultiplier;
-                    if (h1 > 50) h1 = 50; // Cap height
-                    obstacle.rects.push({x: 0, y: -h1, width: baseWidth, height: h1});
-
-                    if (type >= 1) { // One arm
-                        let armHeight = baseHeight * 0.6;
-                        let armY = -h1 + 8;
-                        obstacle.rects.push({x: -baseWidth, y: armY, width: baseWidth, height: armHeight});
-                    }
-                    if (type >= 2) { // Two arms
-                        let armHeight2 = baseHeight * 0.5;
-                        let armY2 = -h1 + 15;
-                        obstacle.rects.push({x: baseWidth, y: armY2, width: baseWidth, height: armHeight2});
-                    }
-                }
-                obstacles.push(obstacle);
-            }
-            
-            function spawnInitialScenery() {
-                for (let i = 0; i < 3; i++) {
-                    hills.push({
-                        x: Math.random() * canvas.width,
-                        y: player.groundY,
-                        w: 200 + Math.random() * 300,
-                        h: 30 + Math.random() * 30,
-                        speed: 0.08
-                    });
-                }
-                for (let i = 0; i < 5; i++) {
-                    clouds.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * (canvas.height * 0.6),
-                        radius: 12 + Math.random() * 12,
-                        speed: 0.1 + Math.random() * 0.2
-                    });
-                }
-            }
-
-            function updateScenery() {
-                hills.forEach(h => {
-                    h.x -= h.speed;
-                    if (h.x + h.w < 0) h.x = canvas.width;
-                });
-                clouds.forEach(c => {
-                    c.x -= c.speed;
-                    if (c.x + c.radius * 2 < 0) c.x = canvas.width;
-                });
-            }
-
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // Hills
-                ctx.fillStyle = hillColor;
-                hills.forEach(h => {
-                    ctx.beginPath();
-                    ctx.moveTo(h.x, h.y);
-                    ctx.quadraticCurveTo(h.x + h.w / 2, h.y - h.h, h.x + h.w, h.y);
-                    ctx.fill();
-                });
-
-                // Clouds
-                ctx.fillStyle = cloudColor;
-                clouds.forEach(c => {
-                    ctx.beginPath();
-                    ctx.arc(c.x, c.y, c.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-
-                // Ground
-                ctx.fillStyle = groundColor;
-                ctx.fillRect(0, player.groundY, canvas.width, canvas.height - player.groundY);
-
-                // Player
-                ctx.fillStyle = playerColor;
-                const p = player;
-                // Body
-                ctx.fillRect(p.x, p.y + p.height * 0.3, p.width * 0.8, p.height * 0.6);
-                // Neck
-                ctx.fillRect(p.x + p.width * 0.6, p.y + p.height * 0.1, p.width * 0.25, p.height * 0.3);
-                // Head
-                ctx.fillRect(p.x + p.width * 0.6, p.y, p.width * 0.4, p.height * 0.3);
-                // Mane
-                ctx.fillRect(p.x + p.width * 0.5, p.y, p.width * 0.25, p.height * 0.2);
-                // Legs
-                ctx.fillRect(p.x + p.width * 0.1, p.y + p.height * 0.9, p.width * 0.2, p.height * 0.2);
-                ctx.fillRect(p.x + p.width * 0.5, p.y + p.height * 0.9, p.width * 0.2, p.height * 0.2);
-                // Tail
-                ctx.fillRect(p.x - p.width * 0.2, p.y + p.height * 0.4, p.width * 0.2, p.height * 0.2);
-
-
-                // Obstacles
-                ctx.fillStyle = obstacleColor;
-                for (const obs of obstacles) {
-                    for (const rect of obs.rects) {
-                        ctx.fillRect(obs.x + rect.x, obs.y + rect.y, rect.width, rect.height);
-                    }
-                }
-                
-                // Instructions
-                if (gameState === 'waiting') {
-                    instructions.textContent = 'Press SPACE or TAP to Start';
-                    instructions.style.opacity = '1';
-                } else {
-                    instructions.style.opacity = '0';
-                }
-            }
-
-            function initGame() {
-                updateGameColors();
-                resizeGameCanvas();
-                window.addEventListener('resize', resizeGameCanvas);
-                window.addEventListener('themechange', updateGameColors);
-                
-                document.body.addEventListener('keydown', handleInput);
-                document.body.addEventListener('touchstart', handleInput, { passive: false });
-
-                gameLoop();
-            }
-            
-            initGame();
         });
     </script>
 </body>
