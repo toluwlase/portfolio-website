@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steven Olufowobi | Health Data Scientist & IT Specialist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* * =============================================
+         * Custom Styles & Theming
+         * =============================================
+         */
+        :root {
+            --bg-primary: #f9fafb; /* gray-50 */
+            --bg-secondary: #f3f4f6; /* gray-100 */
+            --bg-glass: rgba(255, 255, 255, 0.4);
+            --border-glass: rgba(255, 255, 255, 0.6);
+            --text-primary: #111827; /* gray-900 */
+            --text-secondary: #4b5563; /* gray-600 */
+            --border-color: #e5e7eb; /* gray-200 */
+            --accent-color: #0ea5e9; /* sky-500 */
+            --glow-color: rgba(56, 189, 248, 0.5);
+            --corner-radius: 1.25rem; /* 20px */
+        }
+        .dark {
+            --bg-primary: #030712; /* gray-950 */
+            --bg-secondary: #1f2937; /* gray-800 */
+            --bg-glass: rgba(31, 41, 55, 0.4);
+            --border-glass: rgba(55, 65, 81, 0.6);
+            --text-primary: #f9fafb; /* gray-50 */
+            --text-secondary: #d1d5db; /* gray-300 */
+            --border-color: #374151; /* gray-700 */
+            --accent-color: #38bdf8; /* sky-400 */
+            --glow-color: rgba(56, 189, 248, 0.7);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Enhanced Glassmorphism Effect */
+        .glass-effect {
+            background-color: var(--bg-glass);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+            border-radius: var(--corner-radius);
+        }
+        
+        /* Navigation link active state */
+        .nav-active {
+            color: var(--accent-color) !important;
+            font-weight: 600;
+        }
+
+        /* CV Toggle Switch with Glow */
+        #cv-toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+        }
+        @media (max-width: 420px) {
+            #cv-toggle-container {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 1rem;
+            }
+        }
+        .profile-title {
+            font-size: 1.125rem; font-weight: 600; cursor: pointer; transition: color 0.3s;
+            text-align: center;
+        }
+        .profile-title.active { color: var(--accent-color); }
+        .profile-title.inactive { color: var(--text-secondary); }
+
+        #cv-toggle-button {
+            width: 52px; height: 32px; border-radius: 9999px; position: relative; cursor: pointer;
+            animation: pulse-glow 4s infinite ease-in-out;
+            flex-shrink: 0;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px 2px var(--glow-color); }
+            50% { box-shadow: 0 0 25px 5px var(--glow-color); }
+        }
+        #cv-toggle-button::before {
+            content: ''; position: absolute; top: 4px; left: 4px; width: 24px; height: 24px;
+            background-color: white; border-radius: 50%; transition: transform 0.3s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        #cv-toggle-button.it-active::before { transform: translateX(20px); }
+        
+        /* Button Styling */
+        .btn {
+            padding: 0.75rem 1.5rem; 
+            border-radius: var(--corner-radius); 
+            font-weight: 600; text-align: center;
+            transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s; transform-origin: center;
+        }
+        .btn:hover { transform: scale(1.05); }
+        .btn-glass {
+            background-color: var(--bg-glass); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
+            border: 1px solid var(--border-glass); color: var(--text-primary); box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .btn-glass:hover {
+             background-color: var(--accent-color); color: white !important; border-color: var(--accent-color);
+        }
+        
+        /* Interactive Card Hover/Scroll Effect */
+        .interactive-card {
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s;
+        }
+        /* Desktop Hover */
+        @media (hover: hover) and (pointer: fine) {
+            .interactive-card:hover {
+                transform: translateY(-5px) scale(1.03);
+                box-shadow: 0 8px 50px rgba(0, 0, 0, 0.2);
+            }
+        }
+        /* Mobile Scroll Animation */
+        .card-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .card-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Experience Section Highlighter */
+        #experience-highlighter {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            transition: top 0.5s cubic-bezier(0.23, 1, 0.32, 1), height 0.5s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s;
+            opacity: 0;
+            z-index: 1; /* Behind content, above container bg */
+            pointer-events: none; /* Allows clicks to pass through */
+        }
+        .experience-item {
+             padding: 1.5rem; /* 24px */
+             position: relative;
+             z-index: 2; /* Keep content above the highlighter */
+        }
+
+        /* General Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-primary text-primary">
+
+    <header id="header" class="glass-effect sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#" class="text-2xl font-bold text-primary">Steven Olufowobi</a>
+                </div>
+                <nav class="hidden md:flex md:items-center md:space-x-8" id="desktop-nav">
+                    <a href="#about" class="text-secondary hover:text-accent-color transition">About</a>
+                    <a href="#skills" class="text-secondary hover:text-accent-color transition">Skills</a>
+                    <a href="#projects" class="text-secondary hover:text-accent-color transition">Projects</a>
+                    <a href="#experience" class="text-secondary hover:text-accent-color transition">Experience</a>
+                    <a href="#education" class="text-secondary hover:text-accent-color transition">Education</a>
+                    <a href="#contact" class="text-secondary hover:text-accent-color transition">Contact</a>
+                </nav>
+                <div class="flex items-center">
+                     <button id="dark-mode-toggle" class="p-2 rounded-full text-secondary hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none transition-colors mr-2">
+                        <i data-lucide="moon" id="moon-icon"></i>
+                        <i data-lucide="sun" id="sun-icon" class="hidden"></i>
+                    </button>
+                    <div class="md:hidden">
+                        <button id="mobile-menu-button" type="button" class="p-2 rounded-md text-secondary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-color">
+                            <i data-lucide="menu"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden glass-effect">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-accent-color hover:bg-secondary transition">About</a>
+                <a href="#skills" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-accent-color hover:bg-secondary transition">Skills</a>
+                <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-accent-color hover:bg-secondary transition">Projects</a>
+                <a href="#experience" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-accent-color hover:bg-secondary transition">Experience</a>
+                <a href="#education" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-accent-color hover:bg-secondary transition">Education</a>
+                <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-accent-color hover:bg-secondary transition">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="home" class="py-1"></section>
+
+        <section class="py-20 sm:py-28 flex flex-col md:flex-row items-center justify-between md:gap-x-16">
+            <div class="md:w-3/5 text-center md:text-left">
+                <h1 class="text-5xl md:text-7xl font-black text-primary leading-tight">
+                    Steven Olufowobi
+                </h1>
+                <p class="mt-4 text-xl md:text-2xl text-secondary">
+                    Health Data Scientist & IT Systems Specialist
+                </p>
+                <div id="intro-text" class="mt-4 text-lg text-secondary max-w-xl mx-auto md:mx-0">
+                </div>
+                <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a href="HDS CV.20.6.2025.pdf" download class="btn btn-glass">Download HDS CV</a>
+                    <a href="IT CV.20.6.2025.pdf" download class="btn btn-glass">Download IT CV</a>
+                </div>
+            </div>
+            <div class="md:w-2/5 mt-12 md:mt-0 flex justify-center">
+                <div class="glass-effect p-2 shadow-2xl">
+                    <img src="https://i.imgur.com/iqFfMxS.jpeg" alt="Steven Olufowobi" class="w-64 sm:w-80 md:w-96 h-auto" style="border-radius: calc(var(--corner-radius) - 8px);">
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 flex flex-col items-center">
+             <div id="cv-toggle-container" class="glass-effect">
+                <span id="hds-title" class="profile-title active">Health Data Scientist</span>
+                <button id="cv-toggle-button" class="glass-effect"></button>
+                <span id="it-title" class="profile-title inactive">IT Systems Specialist</span>
+            </div>
+        </section>
+
+        <section id="about" class="py-24 sm:py-32">
+            <div id="about-content" class="fade-in max-w-3xl mx-auto text-center">
+            </div>
+        </section>
+
+        <section id="skills" class="py-24 sm:py-32">
+            <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold">Technical Skills & Competencies</h2>
+                <p class="mt-4 text-lg text-secondary max-w-2xl mx-auto">A versatile skillset bridging data science, IT service management, and healthcare systems.</p>
+            </div>
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="glass-effect p-6 interactive-card">
+                    <div class="flex items-center gap-4"><div class="bg-accent-color/10 p-3 rounded-full"><i data-lucide="database" class="text-accent-color"></i></div><h3 class="text-xl font-semibold">Data Science & Analytics</h3></div>
+                    <ul class="mt-4 list-disc list-inside text-secondary space-y-2"><li>Python, R, SQL</li><li>NLP & Machine Learning</li><li>ETL & Data Wrangling</li><li>Data Visualisation (Tableau)</li></ul>
+                </div>
+                 <div class="glass-effect p-6 interactive-card">
+                    <div class="flex items-center gap-4"><div class="bg-accent-color/10 p-3 rounded-full"><i data-lucide="shield-check" class="text-accent-color"></i></div><h3 class="text-xl font-semibold">IT Service Management</h3></div>
+                    <ul class="mt-4 list-disc list-inside text-secondary space-y-2"><li>ITIL v4 Framework</li><li>Incident & Problem Management</li><li>Change Management</li><li>ServiceNow Platform</li></ul>
+                </div>
+                <div class="glass-effect p-6 interactive-card">
+                    <div class="flex items-center gap-4"><div class="bg-accent-color/10 p-3 rounded-full"><i data-lucide="heart-pulse" class="text-accent-color"></i></div><h3 class="text-xl font-semibold">Healthcare Systems</h3></div>
+                     <ul class="mt-4 list-disc list-inside text-secondary space-y-2"><li>EPR/EHR (Oracle Cerner, etc.)</li><li>HL7, FHIR Interoperability</li><li>SNOMED CT, ICD-10</li><li>GDPR & Data Governance</li></ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="projects" class="py-24 sm:py-32">
+            <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold">My Projects</h2>
+                <p class="mt-4 text-lg text-secondary max-w-2xl mx-auto">A selection of projects I've built.</p>
+            </div>
+            <div class="mt-16 max-w-2xl mx-auto">
+                <div class="glass-effect p-8 interactive-card">
+                    <div class="flex flex-col sm:flex-row items-center gap-8">
+                        <div class="flex-shrink-0 bg-accent-color/10 p-4 rounded-lg">
+                             <i data-lucide="brain-circuit" class="text-accent-color w-16 h-16"></i>
+                        </div>
+                        <div class="text-center sm:text-left">
+                            <h3 class="text-2xl font-bold">The Unofficial EPIC Sphinx Quiz</h3>
+                            <p class="text-secondary mt-2 mb-4">A gamified quiz application designed to test knowledge on the EPIC Sphinx system, featuring multiple modes and performance analytics.</p>
+                            <a href="http://sphinx.toluwalase.uk" target="_blank" rel="noopener noreferrer" class="btn btn-glass inline-flex items-center gap-2">
+                                Take the Quiz
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-24 sm:py-32">
+            <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold">Professional Experience</h2>
+                <p class="mt-4 text-lg text-secondary max-w-2xl mx-auto">A timeline of my professional roles and key achievements.</p>
+            </div>
+            <div id="experience-container" class="mt-16 relative">
+                 <div id="experience-highlighter" class="glass-effect"></div>
+                 <div id="experience-content" class="space-y-12">
+                 </div>
+            </div>
+        </section>
+
+        <section id="education" class="py-24 sm:py-32">
+             <div class="text-center mb-16"><h2 class="text-3xl md:text-4xl font-bold">Education & Certifications</h2><p class="mt-4 text-lg text-secondary max-w-2xl mx-auto">My academic background and professional credentials.</p></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="glass-effect p-8 interactive-card">
+                    <h3 class="text-2xl font-bold mb-4">Education</h3>
+                    <div class="space-y-6">
+                        <div><p class="font-semibold text-lg text-accent-color">MSc in Health Data Science (Merit)</p><p class="text-secondary">University of Birmingham | 2022 - 2023</p></div>
+                        <div><p class="font-semibold text-lg text-accent-color">BSc in Management Information Systems (2:1)</p><p class="text-secondary">American University of Nigeria | 2016 - 2020</p></div>
+                    </div>
+                </div>
+                <div class="glass-effect p-8 interactive-card">
+                     <h3 class="text-2xl font-bold mb-4">Certifications</h3>
+                    <ul class="space-y-4 text-lg">
+                        <li class="flex items-center gap-3"><i data-lucide="award" class="text-accent-color w-5 h-5"></i>ITIL® v4 Foundation (2024)</li>
+                        <li class="flex items-center gap-3"><i data-lucide="award" class="text-accent-color w-5 h-5"></i>PRINCE2® Foundation (2024)</li>
+                        <li class="flex items-center gap-3"><i data-lucide="award" class="text-accent-color w-5 h-5"></i>NHS Clinical Systems & Digital Standards</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+         <section id="contact" class="py-24 sm:py-32">
+            <div class="text-center"><h2 class="text-3xl md:text-4xl font-bold">Get In Touch</h2><p class="mt-4 text-lg text-secondary max-w-2xl mx-auto">I'm always open to discussing new projects, creative ideas, or opportunities to be part of an ambitious team.</p></div>
+            <div class="mt-16 max-w-lg mx-auto flex flex-col items-center space-y-4">
+                 <a href="mailto:toluwlase@outlook.com" class="interactive-card glass-effect w-full p-4 text-lg text-secondary hover:text-accent-color transition flex items-center gap-3"><i data-lucide="mail"></i><span>toluwlase@outlook.com</span></a>
+                <a href="tel:+447308752529" class="interactive-card glass-effect w-full p-4 text-lg text-secondary hover:text-accent-color transition flex items-center gap-3"><i data-lucide="phone"></i><span>+44 7308 752529</span></a>
+                 <a href="https://www.linkedin.com/in/steven-olufowobi-442034234" target="_blank" rel="noopener noreferrer" class="interactive-card glass-effect w-full p-4 text-lg text-secondary hover:text-accent-color transition flex items-center gap-3"><i data-lucide="linkedin"></i><span>linkedin.com/in/steven-olufowobi</span></a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-custom mt-20"><div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-secondary"><p>&copy; 2025 Steven Olufowobi. All Rights Reserved.</p></div></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            // Mobile Menu
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+
+            // Dark Mode
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const html = document.documentElement;
+            const moonIcon = document.getElementById('moon-icon');
+            const sunIcon = document.getElementById('sun-icon');
+            const applyTheme = (theme) => {
+                html.classList.toggle('dark', theme === 'dark');
+                moonIcon.classList.toggle('hidden', theme === 'dark');
+                sunIcon.classList.toggle('hidden', theme !== 'dark');
+            };
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+            darkModeToggle.addEventListener('click', () => {
+                const currentTheme = html.classList.contains('dark') ? 'light' : 'dark';
+                applyTheme(currentTheme);
+                localStorage.setItem('theme', currentTheme);
+            });
+
+            // CV Data
+            const cvData = { 
+                hds: { 
+                    intro: `Welcome! I'm an MSc-qualified Health Data Scientist with a passion for transforming complex clinical data into actionable insights.`, 
+                    about: { title: `From Data to Decisions in Healthcare`, summary: `MSc-qualified Health Data Scientist with hands-on experience in NHS clinical environments and large-scale EPR system (Oracle Cerner) implementation. Expertly leverages Python (Pandas, Scikit-learn), SQL, and NLP to analyze complex clinical data, model patient pathways, and drive measurable improvements in service delivery and patient safety. Translates clinical requirements into technical solutions, bridging the gap between frontline staff and data-driven strategy. Proven ability to deliver end-to-end data projects, from ETL pipeline development to generating actionable insights that enhance healthcare outcomes.` }, 
+                    experience: [ { role: 'Health Data Analyst / EPR Specialist', company: 'Royal Cornwall Hospital Trust, NHS', date: 'March 2024 - Present', details: ['Reduced medication reconciliation incidents by 25% through root cause analysis of 1,000+ incident tickets in ServiceNow.', 'Ensured 100% service continuity during a trust-wide EPR go-live by developing a real-time issue tracking dashboard in Tableau.', 'Improved clinical data quality by delivering a targeted training program on Oracle Cerner eCare to 200+ clinical staff.'] }, { role: 'Comparative Phenotypic Analysis of Pancreatic Carcinoma using NLP', company: 'MSc Dissertation, University of Birmingham', date: '2023', details: ['Engineered a data-driven solution to identify, extract, and contrast descriptions of pancreatic cancer across disparate data sources.', 'Built a robust ETL pipeline to process over 50MB of unstructured text from PubMed, MIMIC-IV, and social media.', 'Applied advanced NLP to extract phenotypes, symptoms, and genetic markers, revealing novel patient-centric insights.'] }, { role: 'Business Intelligence Analyst', company: 'Niger Delta Power Holding Company', date: 'Feb 2021 - Feb 2022', details: ['Generated ~£50,000 in annual cost savings by implementing a data-driven vendor management process.', 'Eliminated 100% of manual data entry errors by deploying automated financial quality control frameworks using Python and SQL.'] } ] 
+                }, 
+                it: { 
+                    intro: `Welcome! I'm an ITIL-certified IT Systems Specialist dedicated to ensuring the reliability and performance of critical healthcare systems.`, 
+                    about: { title: `Powering Clinical Systems and Services`, summary: `ITIL-certified IT Systems Specialist with hands-on experience supporting large-scale NHS clinical systems (Oracle Cerner, PAS, MAXIMS) and leading system implementation activities. Expert in IT service management, incident resolution, and change management within complex healthcare environments. Proven ability to ensure service continuity, deliver comprehensive user training, and act as a key technical liaison between clinical staff and IT service teams. Combines deep technical knowledge with an analytical approach (MSc Health Data Science) to drive service improvement and optimize system performance.` }, 
+                    experience: [ { role: 'eCare Systems Support Analyst (IT)', company: 'Royal Cornwall Hospital Trust, NHS', date: 'March 2024 - Present', details: ['Served as a primary technical escalation point during the Oracle Cerner eCare implementation, resolving over 500+ service tickets.', 'Ensured 100% service availability of critical clinical systems during the high-risk go-live period.', 'Reduced recurring system issues by 25% by applying ITIL problem management techniques and conducting root cause analysis.'] }, { role: 'Web & Systems Administrator', company: 'Jubilee Centre, University of Birmingham', date: 'Aug 2023 - Sep 2023', details: ['Executed a complete web platform migration, including database transfer and content restructuring, ensuring 100% data integrity.', 'Improved platform stability by implementing a systematic testing protocol, identifying and resolving critical interface bugs prior to launch.'] }, { role: 'IT Business Analyst', company: 'Niger Delta Power Holding Company', date: 'Feb 2021 - Feb 2022', details: ['Led the full-cycle digitisation of the company\'s paper-based accounts and documentation systems.', 'Deployed automated data quality control frameworks using SQL scripts, eliminating manual data entry errors.'] } ] 
+                } 
+            };
+
+            // CV Toggle
+            const toggleButton = document.getElementById('cv-toggle-button');
+            const hdsTitle = document.getElementById('hds-title');
+            const itTitle = document.getElementById('it-title');
+            const introText = document.getElementById('intro-text');
+            const aboutContent = document.getElementById('about-content');
+            const experienceContent = document.getElementById('experience-content');
+            let isItProfile = false;
+            
+            // --- FINALIZED EXPERIENCE HIGHLIGHTER ---
+            const highlighter = document.getElementById('experience-highlighter');
+            let experienceObserver;
+
+            function observeExperienceItems() {
+                if (experienceObserver) experienceObserver.disconnect();
+                
+                const experienceItems = document.querySelectorAll('.experience-item');
+                if (experienceItems.length === 0) {
+                    highlighter.style.opacity = '0';
+                    return;
+                }
+                
+                const firstItem = experienceItems[0];
+                highlighter.style.top = `${firstItem.offsetTop}px`;
+                highlighter.style.height = `${firstItem.offsetHeight}px`;
+                highlighter.style.opacity = '1';
+
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '-40% 0px -60% 0px',
+                    threshold: 0
+                };
+
+                experienceObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const target = entry.target;
+                            highlighter.style.top = `${target.offsetTop}px`;
+                            highlighter.style.height = `${target.offsetHeight}px`;
+                        }
+                    });
+                }, observerOptions);
+
+                experienceItems.forEach(item => experienceObserver.observe(item));
+            }
+            
+            // --- MOBILE SCROLL ANIMATIONS FOR OTHER CARDS ---
+            const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+            if (isTouchDevice()) {
+                const cards = document.querySelectorAll('.interactive-card');
+                cards.forEach(card => card.classList.add('card-hidden'));
+
+                const cardObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('card-visible');
+                            cardObserver.unobserve(entry.target); 
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                cards.forEach(card => cardObserver.observe(card));
+            }
+
+            function updateContent(profile) {
+                const data = cvData[profile];
+                introText.innerHTML = `<p class="fade-in">${data.intro}</p>`;
+                aboutContent.innerHTML = `<div class="fade-in"><h2 class="text-3xl md:text-4xl font-bold">${data.about.title}</h2><p class="mt-6 text-lg text-secondary">${data.about.summary}</p></div>`;
+                experienceContent.innerHTML = data.experience.map((job) => `
+                    <div class="experience-item">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-4 items-start">
+                           <div class="md:col-span-1 text-left md:text-right pt-2"><p class="font-semibold text-secondary">${job.date}</p></div>
+                            <div class="md:col-span-3">
+                                <h3 class="text-2xl font-bold">${job.role}</h3>
+                                <p class="text-lg text-secondary mt-1">${job.company}</p>
+                                <ul class="mt-4 list-disc list-inside text-secondary space-y-2">${job.details.map(detail => `<li>${detail}</li>`).join('')}</ul>
+                            </div>
+                        </div>
+                    </div>`).join('');
+                
+                setTimeout(observeExperienceItems, 0);
+            }
+            
+            function setToggleState(isIt) {
+                isItProfile = isIt;
+                toggleButton.classList.toggle('it-active', isIt);
+                hdsTitle.classList.toggle('active', !isIt);
+                hdsTitle.classList.toggle('inactive', isIt);
+                itTitle.classList.toggle('active', isIt);
+                itTitle.classList.toggle('inactive', !isIt);
+                updateContent(isIt ? 'it' : 'hds');
+            }
+
+            toggleButton.addEventListener('click', () => setToggleState(!isItProfile));
+            hdsTitle.addEventListener('click', () => setToggleState(false));
+            itTitle.addEventListener('click', () => setToggleState(true));
+            
+            setToggleState(false);
+
+            // Main Navigation Scrollspy
+            const sections = document.querySelectorAll('main section[id]');
+            const navLinks = document.querySelectorAll('#desktop-nav a');
+            
+            function setActiveLink(id) {
+                const targetId = (id === 'home' || !id) ? 'about' : id;
+                navLinks.forEach(link => {
+                    link.classList.toggle('nav-active', link.getAttribute('href') === `#${targetId}`);
+                });
+            }
+            
+            const mainObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setActiveLink(entry.target.getAttribute('id'));
+                    }
+                });
+            }, { rootMargin: '-40% 0px -60% 0px', threshold: 0 });
+
+            sections.forEach(section => mainObserver.observe(section));
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    setTimeout(() => {
+                         setActiveLink(e.target.getAttribute('href').substring(1));
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
